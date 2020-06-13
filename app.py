@@ -10,8 +10,8 @@ currentYear = datetime.now().year
 external_stylesheets = [
     'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css',
 ]
-
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets, assets_external_path='https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js')
+server = app.server
 app.title = 'SciPy 2020: EinsteinPy'
 app.layout = html.Div(
     children=[
@@ -43,6 +43,10 @@ app.layout = html.Div(
         ],
         className="nav-wrapper grey lighten-4")
         ]),
+    html.H1(
+        children='EinsteinPy : Python for General Relativity',
+        style={'text-align': 'center'}
+        ),
     html.H1(
         children='EinsteinPy : Python for General Relativity',
         style={'text-align': 'center'}
