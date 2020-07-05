@@ -10,6 +10,32 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
+
+
+import numpy as np
+import astropy.units as u
+
+from einsteinpy.plotting import GeodesicPlotter
+from einsteinpy.coordinates import SphericalDifferential
+from einsteinpy.bodies import Body
+from einsteinpy.geodesic import Geodesic
+
+import pickle
+
+def perihelion():
+    Attractor = Body(name="BH", mass=6e24*u.kg, parent=None)
+    sph_obj = SphericalDifferential(130*u.m, np.pi/2*u.rad, -np.pi/8*u.rad,
+                                    0*u.m/u.s, 0*u.rad/u.s, 1900*u.rad/u.s)
+    Object = Body(differential=sph_obj, parent=Attractor)
+    geodesic = Geodesic(body=Object, time=0 * u.s, end_lambda=0.002, step_size=5e-8)
+
+    obj = GeodesicPlotter()
+    obj.plot(geodesic)
+    return obj.fig
+
+with open('trajectory.pkl', 'rb') as input:
+    obj = pickle.load(input)
+
 external_stylesheets = [
     'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css',
     'https://use.fontawesome.com/releases/v5.0.10/css/all.css',
@@ -42,7 +68,7 @@ app.layout = html.Div(
                     html.A('Chatroom', href='https://chat.einsteinpy.org', className="black-text"),
                 ]),
                 html.Li([
-                    html.A('Contact', href='#', className="waves-effect waves-light btn white-text"),
+                    html.A('Contact', href='mailto:shreyas@einsteinpy.org', className="waves-effect waves-light btn white-text"),
                 ]),
             ],
             className="right hide-on-med-and-down  black-text"
@@ -65,7 +91,62 @@ app.layout = html.Div(
         children='Python for General Relativity',
         style={'text-align': 'center'}
         ),
+    html.H6(
+        children='Lets Visualize Advancement of Perihelion',
+        style={'text-align': 'center'}
+        ),
 
+    dcc.Graph(
+        id='Perihelion',
+        figure=obj.fig,
+    ),
+    html.Div(
+    [
+    html.P(
+        children="The above geodesic was the biggest question in late 1800s and 1900s.\
+         No one was sure why thes type of orbits should appear. Even Sir Isaac Newton knew about\
+         such a problem in his theory. Later, Prof. Einstein's theory of general relativity came and solved everything for us.\
+         This is a very niche example usecase of EinsteinPy, you can do much much more. ",
+        style={'width': '80%', 'text-align': 'center', 'vertical-align': 'middle', 'margin-left':'10%'},
+    ),
+    html.H4(
+            children='About EinsteinPy',
+            style={'text-align': 'center'}
+            ),
+    html.P(
+        children="EinsteinPy is an open source pure Python package dedicated to problems arising in General Relativity and gravitational physics, such as geodesics plotting for Schwarzschild, Kerr and Kerr Newman space-time model, calculation of Schwarzschild radius, calculation of Event Horizon and Ergosphere for Kerr space-time. Symbolic Manipulations of various tensors like Metric, Riemann, Ricci, Ricci Scalar, Weyl, Schouten, Stress-Energy-Momentum, Einstein and Christoffel Symbols is also possible using the library. EinsteinPy also features Hypersurface Embedding of Schwarzschild space-time, which will soon lead to modelling of Gravitational Lensing! It is released under the MIT license. ",
+        style={'width': '80%', 'text-align': 'center', 'vertical-align': 'middle', 'margin-left':'10%'},
+    ),
+    ],
+    className="row",
+    ),
+
+    html.H4(
+        children='How we started EinsteinPy?',
+        style={'text-align': 'center'}
+        ),
+    html.A('EinsteinPy Blog', href='https://blog.shreyasb.dev/Kickstarting-EinsteinPy-Part-1/', className="waves-effect waves-light btn white-text", style={'margin-left': '45%'}),
+
+    html.H4(
+        children='Example Notebooks on Binder',
+        style={'text-align': 'center'}
+        ),
+
+    html.A('Run Binder', href='https://beta.mybinder.org/v2/gh/einsteinpy/einsteinpy/0.3.x?filepath=index.ipynb', className="waves-effect waves-light btn white-text", style={'margin-left': '45%'}),
+    html.P(
+        children="The example notebooks cover a wide variety of topics related to the library like symbolic manipulations, shadow of a black hole, hypersurface of a black hole, Frame dragging etc. Go and check them out now!",
+        style={'width': '80%', 'text-align': 'center', 'vertical-align': 'middle', 'margin-left':'10%'},
+    ),
+
+    html.H4(
+        children='Conventional Poster',
+        style={'text-align': 'center'}
+        ),
+    html.A('PDF Poster', href='https://shreyasb.dev/vishakha/one.pdf', className="waves-effect waves-light btn white-text", style={'margin-left': '45%'}),
+    html.P(
+        children="Are you fond of conventional posters? Do you like PDF style posters and are not enjoying this? Okay, I got you covered.",
+        style={'width': '80%', 'text-align': 'center', 'vertical-align': 'middle', 'margin-left':'10%'},
+    ),
 
 
     html.Footer(
